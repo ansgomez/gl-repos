@@ -60,7 +60,6 @@ func main() {
 		fmt.Println("gl-repos", version)
 		return
 	}
-	warnLegacyEnv(os.Stderr)
 	if flag.NArg() > 1 {
 		flag.Usage()
 		os.Exit(2)
@@ -78,11 +77,6 @@ func main() {
 			fetchSet = true
 		}
 	})
-	// The settings and cache of gitgaze (the old name) move once;
-	// -doctor changes nothing and only reports them.
-	if !*doctorRun {
-		migrate(os.Stderr, source != "")
-	}
 	// Explicit flags win over the config file.
 	applyFlags := func(cfg *config.Config) {
 		flag.Visit(func(f *flag.Flag) {
@@ -201,9 +195,9 @@ func usage(w io.Writer, cfgPath string) {
 	}
 }
 
-// checkExplicitConfig reports a config file named by source (-config,
-// GL_REPOS_CONFIG or the deprecated GITGAZE_CONFIG) that cannot be
-// read; "" means the default location, which may be missing.
+// checkExplicitConfig reports a config file named by source (-config or
+// GL_REPOS_CONFIG) that cannot be read; "" means the default location,
+// which may be missing.
 func checkExplicitConfig(path, source string) error {
 	if source == "" {
 		return nil

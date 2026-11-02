@@ -197,26 +197,21 @@ func TestPathEnv(t *testing.T) {
 	if p := Path(); p != "/elsewhere/g.toml" {
 		t.Errorf("Path() = %q with GL_REPOS_CONFIG set", p)
 	}
-	t.Setenv("GITGAZE_CONFIG", "/old/g.toml")
 	if p, src := EnvPath(); p != "/elsewhere/g.toml" || src != "GL_REPOS_CONFIG" {
-		t.Errorf("EnvPath() = %q, %q: the new variable must win", p, src)
+		t.Errorf("EnvPath() = %q, %q with GL_REPOS_CONFIG set", p, src)
 	}
 	t.Setenv("GL_REPOS_CONFIG", "")
-	if p, src := EnvPath(); p != "/old/g.toml" || src != "GITGAZE_CONFIG" || Path() != p {
-		t.Errorf("EnvPath() = %q, %q; Path() = %q: the deprecated variable still works", p, src, Path())
+	if p, src := EnvPath(); p != "" || src != "" {
+		t.Errorf("EnvPath() = %q, %q with GL_REPOS_CONFIG unset", p, src)
 	}
-	t.Setenv("GITGAZE_CONFIG", "")
 	t.Setenv("XDG_CONFIG_HOME", "/xdg")
 	if p := Path(); p != filepath.Join("/xdg", "gl-repos", "config.toml") {
 		t.Errorf("Path() = %q with XDG_CONFIG_HOME set", p)
 	}
-	if d := LegacyDir(); d != filepath.Join("/xdg", "gitgaze") {
-		t.Errorf("LegacyDir() = %q with XDG_CONFIG_HOME set", d)
-	}
 	t.Setenv("XDG_CONFIG_HOME", "")
 	t.Setenv("HOME", "/home/u")
-	if d, old := Dir(), LegacyDir(); d != filepath.Join("/home/u", ".config", "gl-repos") || old != filepath.Join("/home/u", ".config", "gitgaze") {
-		t.Errorf("Dir() = %q, LegacyDir() = %q without XDG_CONFIG_HOME", d, old)
+	if d := Dir(); d != filepath.Join("/home/u", ".config", "gl-repos") {
+		t.Errorf("Dir() = %q without XDG_CONFIG_HOME", d)
 	}
 }
 

@@ -9,8 +9,7 @@ per check as soon as it is done, `✓` fine, `!` works with limits, `✗`
 broken, with a fix below each `!` and `✗`; it exits with status 1 if
 anything is `✗`. It checks:
 
-- the config file in use (loads and is valid;
-  a leftover `gitgaze` config directory is a `!`, see [Upgrading from gitgaze](#upgrading-from-gitgaze));
+- the config file in use (loads and is valid);
 - git (2.31 or newer);
 - the `tool` and agents;
 - for each profile its CLI (glab/gh), host, login and user name;
@@ -130,25 +129,6 @@ other programs, pick a smaller model, or press `f` to load it anyway.
 `o` shows `lazygit not found in PATH`: install
 lazygit, or set `tool` (or `-tool`) to another program such as `tig`.
 Agents for `t` that are not installed are marked in the picker.
-
-## Upgrading from gitgaze
-
-gl-repos used to be called gitgaze. On its
-first start it moves the old default config directory
-(`~/.config/gitgaze`, or `$XDG_CONFIG_HOME/gitgaze`) to the new one and
-says `gl-repos: moved your settings from <old> to <new> (gitgaze was
-renamed)`; the project cache moves silently. If both directories exist,
-it uses the new one and says `gl-repos: ignoring <old> (gitgaze was
-renamed): using <new>; …`: copy what you need, then remove the old one.
-An old directory that is a symlink is not moved (`… is a symlink, so it
-was not moved …`): point the link, or its target, at the new name
-yourself. Nothing moves when `-config`, `GL_REPOS_CONFIG` or
-`GITGAZE_CONFIG` names the file, and `-doctor` only reports a leftover
-old directory. The old variables `GITGAZE_CONFIG` and
-`GITGAZE_CACHE_DIR` still work for one release when the new ones are
-unset, with a warning. Rename the binary in your scripts and aliases:
-the old `gitgaze` binary is not replaced by `make install`; delete it
-from `$(go env GOPATH)/bin`.
 
 ## Config errors
 

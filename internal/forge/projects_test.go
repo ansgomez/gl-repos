@@ -337,7 +337,6 @@ func useDefaultCacheDir(t *testing.T) {
 	t.Helper()
 	base := t.TempDir()
 	t.Setenv(EnvCacheDir, "")
-	t.Setenv(LegacyEnvCacheDir, "")
 	t.Setenv("XDG_CACHE_HOME", base) // Linux
 	t.Setenv("HOME", base)           // macOS: ~/Library/Caches
 	if d := CacheDir(); d == "" || d != defaultCacheDir() || !strings.HasPrefix(d, base) {

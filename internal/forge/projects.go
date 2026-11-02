@@ -42,22 +42,15 @@ type projectCache struct {
 	Projects []Project `json:"projects"`
 }
 
-// EnvCacheDir overrides the OS cache directory (used by tests);
-// LegacyEnvCacheDir is its deprecated old name (gitgaze was renamed),
-// used only when EnvCacheDir is unset.
-const (
-	EnvCacheDir       = "GL_REPOS_CACHE_DIR"
-	LegacyEnvCacheDir = "GITGAZE_CACHE_DIR"
-)
+// EnvCacheDir overrides the OS cache directory (used by tests).
+const EnvCacheDir = "GL_REPOS_CACHE_DIR"
 
 // CacheDir holds the project lists and the model sizes:
-// $GL_REPOS_CACHE_DIR, else $GITGAZE_CACHE_DIR, else gl-repos in the OS
-// cache directory; "" if none can be found.
+// $GL_REPOS_CACHE_DIR, else gl-repos in the OS cache directory; "" if
+// none can be found.
 func CacheDir() string {
-	for _, v := range []string{EnvCacheDir, LegacyEnvCacheDir} {
-		if d := os.Getenv(v); d != "" {
-			return d
-		}
+	if d := os.Getenv(EnvCacheDir); d != "" {
+		return d
 	}
 	return defaultCacheDir()
 }

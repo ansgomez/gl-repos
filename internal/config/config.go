@@ -147,22 +147,16 @@ func Default() Config {
 }
 
 // Name is the program's name and the name of its config and cache
-// directories. LegacyName is its old name: gitgaze was renamed to
-// gl-repos, and for one release the old directories are moved and the
-// old environment variables still work (see main's migrate.go).
+// directories.
 const (
-	Name       = "gl-repos"
-	LegacyName = "gitgaze"
+	Name = "gl-repos"
 
-	// EnvConfig names the config file; LegacyEnvConfig is its deprecated
-	// old name, used only when EnvConfig is unset.
-	EnvConfig       = "GL_REPOS_CONFIG"
-	LegacyEnvConfig = "GITGAZE_CONFIG"
+	// EnvConfig names the config file.
+	EnvConfig = "GL_REPOS_CONFIG"
 )
 
 // Path returns the config file location in use without -config:
-// $GL_REPOS_CONFIG if set, else the deprecated $GITGAZE_CONFIG, else
-// config.toml in Dir().
+// $GL_REPOS_CONFIG if set, else config.toml in Dir().
 func Path() string {
 	if p, _ := EnvPath(); p != "" {
 		return p
@@ -175,25 +169,17 @@ func Path() string {
 }
 
 // EnvPath returns the config file named by the environment and the
-// variable that named it: GL_REPOS_CONFIG, else GITGAZE_CONFIG; "" if
-// neither is set.
+// variable that named it (GL_REPOS_CONFIG); "" if it is not set.
 func EnvPath() (path, source string) {
-	for _, v := range []string{EnvConfig, LegacyEnvConfig} {
-		if p := os.Getenv(v); p != "" {
-			return p, v
-		}
+	if p := os.Getenv(EnvConfig); p != "" {
+		return p, EnvConfig
 	}
 	return "", ""
 }
 
 // Dir is the default config directory: $XDG_CONFIG_HOME/gl-repos, else
 // ~/.config/gl-repos; "" if neither can be found.
-func Dir() string { return configDir(Name) }
-
-// LegacyDir is where gitgaze kept its config, by the same rules as Dir.
-func LegacyDir() string { return configDir(LegacyName) }
-
-func configDir(name string) string {
+func Dir() string {
 	dir := os.Getenv("XDG_CONFIG_HOME")
 	if dir == "" {
 		home, err := os.UserHomeDir()
@@ -202,7 +188,7 @@ func configDir(name string) string {
 		}
 		dir = filepath.Join(home, ".config")
 	}
-	return filepath.Join(dir, name)
+	return filepath.Join(dir, Name)
 }
 
 // Load reads the config at path on top of the defaults. A missing file is

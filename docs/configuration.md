@@ -101,7 +101,6 @@ fetch, pull and push never recurse into submodules); for glab and gh
 | --- | --- |
 | `GL_REPOS_CONFIG` | Config file, when `-config` is not given (then `$XDG_CONFIG_HOME/gl-repos/config.toml`, then `~/.config/gl-repos/config.toml`). |
 | `GL_REPOS_CACHE_DIR` | Cache directory for project lists and model sizes (default: `~/Library/Caches/gl-repos` on macOS, `$XDG_CACHE_HOME/gl-repos` or `~/.cache/gl-repos` on Linux). |
-| `GITGAZE_CONFIG`, `GITGAZE_CACHE_DIR` | Deprecated old names (gl-repos was called gitgaze), still read for one release when the new name is unset, with a warning such as `GITGAZE_CONFIG is deprecated: use GL_REPOS_CONFIG`. |
 | `SHELL` | What `!` opens (`/bin/sh` if unset). |
 | `GIT_SSH_COMMAND`, `GIT_SSH` | When set, gl-repos does not add its own `BatchMode=yes -o ConnectTimeout=15` ssh options. |
 | `GITLAB_HOST`, `GH_HOST` | Overridden: glab and gh are always told the profile's host (`--hostname`, and these variables for `repo create`). |

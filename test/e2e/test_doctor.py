@@ -122,28 +122,6 @@ r = doctor(bad)
 check("bad config: ✗, other checks run", r.returncode == 1 and '✗ config: ' in r.stdout and 'color = "blue"' in r.stdout
       and "✓ git 2." in r.stdout, r.stdout)
 
-# --- gitgaze was renamed: its default config dir moves once; -doctor only reports it
-mh = os.path.join(fx, "home-migrate")
-old_dir, new_dir = os.path.join(mh, ".config", "gitgaze"), os.path.join(mh, ".config", "gl-repos")
-os.makedirs(old_dir); open(os.path.join(old_dir, "config.toml"), "w").write("depth = 1\n")
-menv = {"PATH": full, "HOME": mh, "XDG_CONFIG_HOME": os.path.join(mh, ".config"),
-        "XDG_CACHE_HOME": os.path.join(mh, ".cache"), "GIT_CONFIG_GLOBAL": "/dev/null",
-        "GL_REPOS_CACHE_DIR": os.path.join(fx, "cache")}
-r = subprocess.run([G, "-doctor"], cwd=W, capture_output=True, text=True, env=menv, timeout=60)
-check("doctor reports the old config dir", f"! old config directory {old_dir} is still there (gitgaze was renamed to gl-repos)" in r.stdout
-      and f"gl-repos moves it to {new_dir} on its next start" in r.stdout and os.path.isdir(old_dir) and not os.path.exists(new_dir), r.stdout)
-r = subprocess.run([G, "-list"], cwd=W, capture_output=True, text=True, env=menv, timeout=60)
-check("start moves the old config dir", r.returncode == 0
-      and f"gl-repos: moved your settings from {old_dir} to {new_dir} (gitgaze was renamed)\n" in r.stderr
-      and os.path.isfile(os.path.join(new_dir, "config.toml")) and not os.path.exists(old_dir), r.stderr)
-r = subprocess.run([G, "-list"], cwd=W, capture_output=True, text=True, env=menv, timeout=60)
-check("second start is quiet", r.returncode == 0 and "gitgaze" not in r.stderr, r.stderr)
-r = subprocess.run([G, "-list"], cwd=W, capture_output=True, text=True, timeout=60,
-                   env={**menv, "GITGAZE_CONFIG": os.path.join(fx, "nonexistent.toml")})
-check("GITGAZE_CONFIG still works, deprecated", r.returncode == 1
-      and "gl-repos: GITGAZE_CONFIG is deprecated: use GL_REPOS_CONFIG\n" in r.stderr
-      and "config: GITGAZE_CONFIG names " in r.stderr, r.stderr)
-
 srv.shutdown()
 print("FAILURES:", FAILS)
 sys.exit(1 if FAILS else 0)

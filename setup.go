@@ -102,7 +102,6 @@ func runDoctor(path, source string, applyFlags func(*config.Config)) int {
 		ConfigPath: path, ConfigSource: source, ConfigExists: exists, ConfigErr: err,
 		AI: ai.Client{URL: cfg.AI.URL, Model: cfg.AI.Model},
 	}
-	s.LegacyConfigDir, s.LegacyConfigMoves = legacyConfig(source)
 	if words, err := tui.SplitCommand(cfg.Tool); err == nil && len(words) > 0 {
 		s.Tool = words[0]
 	} else {
@@ -127,15 +126,4 @@ func runDoctor(path, source string, applyFlags func(*config.Config)) int {
 		return 1
 	}
 	return 0
-}
-
-// legacyConfig returns gitgaze's old config directory if it is still
-// there, and whether the next start moves it (only from the default
-// location, to a new directory that does not exist yet).
-func legacyConfig(source string) (string, bool) {
-	oldDir := config.LegacyDir()
-	if _, err := os.Lstat(oldDir); oldDir == "" || err != nil {
-		return "", false
-	}
-	return oldDir, source == "" && legacyDir(oldDir, config.Dir()) == legacyMove
 }

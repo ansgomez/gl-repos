@@ -6,11 +6,6 @@ Guidelines for agents working on gl-repos.
 
 - `main.go` — flag parsing, `-list` mode, starts the TUI; `setup.go` —
   `-init` (writes the embedded `config.example.toml`) and `-doctor`.
-- `migrate.go` — one release of compatibility with the old name
-  gitgaze: moves `~/.config/gitgaze` and the old cache directory, warns
-  about `GITGAZE_CONFIG`/`GITGAZE_CACHE_DIR` (`Legacy*` names in
-  `config` and `forge`). Delete it and those names after that release;
-  only this migration code (and its tests and docs) may name gitgaze.
 - `internal/doctor` — the read-only setup checks of `-doctor`. Every
   check has a timeout and prints only sanitized text; ssh and Ollama are
   injected (`Env`), and the e2e suite uses fake `glab`/`gh`/`ssh` and a

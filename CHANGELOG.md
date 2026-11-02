@@ -6,6 +6,10 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Removed
+
+- Migration of settings and caches from a pre-release name.
+
 ## [0.1.0] - 2026-11-01
 
 First public release.

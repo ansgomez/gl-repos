@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"io"
 	"os/exec"
-	"path/filepath"
 	"regexp"
 	"slices"
 	"strconv"
@@ -68,15 +67,10 @@ type Setup struct {
 	ConfigSource string // "-config", "GL_REPOS_CONFIG" or "" (default location)
 	ConfigExists bool
 	ConfigErr    error
-	// LegacyConfigDir is gitgaze's old config directory (gl-repos was
-	// called gitgaze), if it is still there; LegacyConfigMoves is true
-	// when the next start moves it to the new place.
-	LegacyConfigDir   string
-	LegacyConfigMoves bool
-	Tool              string
-	Agents            []Agent
-	Profiles          []Profile
-	AI                ai.Client
+	Tool         string
+	Agents       []Agent
+	Profiles     []Profile
+	AI           ai.Client
 }
 
 // Agent is a configured agent: its name and command's program.
@@ -141,9 +135,6 @@ func Check(ctx context.Context, s Setup, env Env) []Result {
 // is done.
 func check(ctx context.Context, s Setup, env Env, add func(Result)) {
 	add(checkConfig(s))
-	if s.LegacyConfigDir != "" {
-		add(checkLegacyConfig(s))
-	}
 	add(checkGit(ctx, env))
 	if _, err := env.LookPath(s.Tool); err != nil {
 		add(Result{Warn, "tool " + s.Tool + " not found: o won't work", "install it, or set tool in the config (e.g. \"tig\")"})
@@ -224,15 +215,6 @@ func checkConfig(s Setup) Result {
 		return Result{Warn, "no config file at " + s.ConfigPath + ": using the defaults", "gl-repos -init writes a commented one"}
 	}
 	return Result{OK, "config " + s.ConfigPath + " loads and is valid", ""}
-}
-
-// checkLegacyConfig reports gitgaze's leftover config directory.
-func checkLegacyConfig(s Setup) Result {
-	text := "old config directory " + s.LegacyConfigDir + " is still there (gitgaze was renamed to gl-repos)"
-	if s.LegacyConfigMoves {
-		return Result{Warn, text, "gl-repos moves it to " + filepath.Dir(s.ConfigPath) + " on its next start (-doctor changes nothing)"}
-	}
-	return Result{Warn, text + " and is not read", "copy what you need into " + s.ConfigPath + ", then remove " + s.LegacyConfigDir}
 }
 
 // checkProfile checks one profile, handing each result to add, and

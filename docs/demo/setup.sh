@@ -150,7 +150,7 @@ chmod 700 "$D/home/.config" "$D/home/.config/gl-repos"; chmod 600 "$D/home/.conf
 cat > "$D/env.sh" <<EOF
 export HOME="$D/home" PATH="$D/bin:/usr/bin:/bin" GIT_CONFIG_GLOBAL="$D/gitconfig" GIT_CONFIG_NOSYSTEM=1
 export GL_REPOS_CACHE_DIR="$D/cache" FAKE_REMOTES="$D/remotes" TERM=xterm-256color
-unset GL_REPOS_CONFIG GITGAZE_CONFIG GITGAZE_CACHE_DIR GITLAB_TOKEN GITLAB_HOST GH_TOKEN GITHUB_TOKEN GLAB_CONFIG_DIR GH_CONFIG_DIR
+unset GL_REPOS_CONFIG GITLAB_TOKEN GITLAB_HOST GH_TOKEN GITHUB_TOKEN GLAB_CONFIG_DIR GH_CONFIG_DIR
 pgrep -f "$D/bin/fake_ollama.py" >/dev/null || ("$(command -v python3)" "$D/bin/fake_ollama.py" 11999 >/dev/null 2>&1 &)
 cd "\$HOME/code"
 PS1='\$ '

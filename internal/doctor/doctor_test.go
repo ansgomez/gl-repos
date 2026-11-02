@@ -216,26 +216,6 @@ func TestMissingCLIAndConfig(t *testing.T) {
 	}
 }
 
-func TestLegacyConfigDir(t *testing.T) {
-	s := setup(t)
-	s.ConfigPath = "/c/gl-repos/config.toml"
-	s.LegacyConfigDir, s.LegacyConfigMoves = "/c/gitgaze", true
-	out, fails := run(t, s, env())
-	if fails != 0 || !strings.Contains(out, "! old config directory /c/gitgaze is still there (gitgaze was renamed to gl-repos)\n"+
-		"    gl-repos moves it to /c/gl-repos on its next start") {
-		t.Errorf("fails %d:\n%s", fails, out)
-	}
-	s.LegacyConfigMoves = false
-	if out, _ := run(t, s, env()); !strings.Contains(out, "! old config directory /c/gitgaze is still there (gitgaze was renamed to gl-repos) and is not read\n"+
-		"    copy what you need into /c/gl-repos/config.toml, then remove /c/gitgaze") {
-		t.Errorf("both dirs:\n%s", out)
-	}
-	s.LegacyConfigDir = ""
-	if out, _ := run(t, s, env()); strings.Contains(out, "old config") {
-		t.Errorf("no old dir:\n%s", out)
-	}
-}
-
 func TestServerTextSanitized(t *testing.T) {
 	s := setup(t, Profile{Name: "x", Forge: forge.GitLab{Host: "h", API: fakeGitLab("evil\x1b[31mname", `"api"`)}})
 	out, _ := run(t, s, env())
