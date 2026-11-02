@@ -6,6 +6,8 @@ project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-02
+
 ### Removed
 
 - Migration of settings and caches from a pre-release name.
@@ -56,5 +58,6 @@ First public release.
 - Releases for Linux/macOS × amd64/arm64 as archives, `.deb` and `.rpm`,
   with an SBOM and checksums signed with cosign (keyless).
 
-[Unreleased]: https://github.com/ansgomez/gl-repos/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/ansgomez/gl-repos/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/ansgomez/gl-repos/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/ansgomez/gl-repos/releases/tag/v0.1.0
