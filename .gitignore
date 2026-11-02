@@ -1,0 +1,6 @@
+/gl-repos
+/dist/
+__pycache__/
+/coverage.out
+/coverage.xml
+.DS_Store

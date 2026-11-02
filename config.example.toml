@@ -1,0 +1,66 @@
+# gl-repos configuration, written by "gl-repos -init". It lives at
+# ~/.config/gl-repos/config.toml (or $XDG_CONFIG_HOME/gl-repos/config.toml,
+# or the file named by -config / GL_REPOS_CONFIG). Every key is optional:
+# everything below is commented out and shows the built-in default, so a
+# newer gl-repos can change a default you never chose. Uncomment only what
+# you want to change (with its [section] line). Command-line flags
+# override the file. Unknown keys and invalid values are reported at
+# startup; "gl-repos -doctor" checks the whole setup.
+
+# Top-level keys must come before the first [section] or [[profile]].
+# depth = 1                   # directory levels below the root to search (0 = root only)
+# jobs = 0                    # concurrent git processes; 0 = number of CPUs
+# fetch_on_start = false      # git fetch --all --prune every repository at startup
+# sort = "name"               # initial sort: name | attention | recent
+# skip = []                   # extra directory names never searched, e.g. ["archive", "tmp"]
+# tool = "lazygit"            # program "o" opens in the repository (tig, gitui, ...)
+# default_profile = "work"    # profile active at start; default: the first one
+#                             # (without [[profile]]: the first whose CLI is installed)
+
+# Profiles: one forge account each, reached through glab or gh and their
+# logins ("glab auth login --hostname <host>", "gh auth login"). Browsing
+# and cloning need only read access; creating projects or subgroups with
+# n/u needs a GitLab token with the "api" scope. Without any [[profile]],
+# gl-repos has a "gitlab" profile (host from [clone] or the glab login) and
+# a "github" profile. Fill in yours:
+# [[profile]]
+# name = "work"
+# forge = "gitlab"              # gitlab | github
+# host = "gitlab.example.com"   # bare host[:port]; default: the GitLab glab is logged in to
+# exclude = ["acme/legal"]      # groups never listed, cached or cloned
+# color = "4"                   # badge color: ANSI number 0-255, "#rgb" or "#rrggbb"
+# default_group = "acme/tools"  # owner prefilled by n/u (one name on GitHub); default: your user
+#
+# [[profile]]
+# name = "personal"
+# forge = "github"
+# color = "5"
+
+# Agents started with "t". Listing any [[agent]] replaces the defaults,
+# which are claude, codex and kimi. command is split into words like a
+# shell would (quotes allowed) but nothing is expanded or run through a
+# shell.
+# [[agent]]
+# name = "claude"
+# command = "claude"
+
+# The default GitLab profile, used only without [[profile]] entries; with
+# them, setting any of these is an error (set them in the profile).
+# [clone]
+# host = ""                   # GitLab searched by "c"; "" = glab login / most common origin
+# exclude = []                # groups never listed, cached or cloned ("legal" or "acme/legal")
+# default_group = ""          # owner prefilled by n/u ("acme/tools"); "" = your user
+
+# The AI assistant ("i"), optional: a local Ollama model proposes git
+# steps that run only after you confirm with y. Needs Ollama and the
+# model: ollama pull gemma4:e2b
+# [ai]
+# url = "http://localhost:11434"
+# model = "gemma4:e2b"        # gemma4:e4b plans better with more RAM
+# max_ctx = 32768             # upper bound for num_ctx (sized per request from 8k; minimum 8192)
+# max_diff_bytes = 24000      # diff sent to the model; 0 = no limit
+# timeout_seconds = 120       # whole request
+# load_timeout_seconds = 90   # until the first output (model load + prompt)
+# stall_timeout_seconds = 20  # max silence while answering
+# keep_alive = "2m"           # unload models gl-repos loaded after this idle time
+# memory_guard = true         # refuse models that do not fit in free RAM (f forces)
